@@ -4,6 +4,7 @@ import Link from 'next/link';
 import LogoutButton from '@/components/LogoutButton';
 import { Star, Sparkles, Moon, Feather, Gem, Flame, Sun, Anchor, Zap, Heart, Menu, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
+import { Session } from '@/types';
 
 const ICONS = [Star, Sparkles, Moon, Feather, Gem, Flame, Sun, Anchor, Zap, Heart];
 const COLORS = [
@@ -25,7 +26,7 @@ const getHash = (str: string) => {
     return Math.abs(hash);
 };
 
-export default function HeaderClient({ session }: { session: any }) {
+export default function HeaderClient({ session }: { session: Session | null }) {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     let IconComponent = Star;

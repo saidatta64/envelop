@@ -21,7 +21,7 @@ export async function uploadImage(formData: FormData) {
   const uploadDir = join(process.cwd(), 'public', 'uploads');
   try {
       await mkdir(uploadDir, { recursive: true });
-  } catch (e) {
+  } catch {
       // Directory might already exist
   }
   

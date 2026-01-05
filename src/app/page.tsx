@@ -1,5 +1,6 @@
 import { getPosts } from "./actions/blog";
 import Link from "next/link";
+import { Post } from "@/types";
 
 export default async function Home() {
   const posts = (await getPosts()).slice(0, 3); // Only show top 3 featured posts
@@ -26,7 +27,7 @@ export default async function Home() {
       <section className="mt-4" style={{ paddingBottom: '6rem' }}>
         <div className="section-header" style={{ marginBottom: '4rem' }}>
           <div>
-            <p className="caps" style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>Editor's Choice</p>
+            <p className="caps" style={{ color: 'var(--accent)', marginBottom: '0.5rem' }}>Editor&apos;s Choice</p>
             <h2 className="serif" style={{ fontSize: '2.5rem' }}>Selected Highlights</h2>
           </div>
           <Link href="/feed" className="caps" style={{ fontSize: '0.8rem', fontWeight: '700', borderBottom: '1px solid var(--foreground)' }}>
@@ -60,7 +61,7 @@ export default async function Home() {
 
         <div className="grid-cols">
           {posts.length > 0 ? (
-            posts.map((post: any) => (
+            posts.map((post: Post) => (
               <article key={post._id} style={{
                 padding: '2rem',
                 borderBottom: '1px solid var(--border)',
@@ -79,7 +80,7 @@ export default async function Home() {
                   <Link href={`/p/${post._id}`} style={{ color: 'inherit', textDecoration: 'none' }}>{post.title}</Link>
                 </h2>
                 <div className="mt-1 flex items-center" style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', opacity: 0.8 }}>
-                  <span className="serif" style={{ fontStyle: 'italic' }}>By {post.author?.username || 'Anonymous'}</span>
+                  <span className="serif" style={{ fontStyle: 'italic' }}>By {(post.author as { username: string })?.username || 'Anonymous'}</span>
                   <span style={{ color: 'var(--muted)' }}>{new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                 </div>
               </article>

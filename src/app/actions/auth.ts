@@ -43,7 +43,7 @@ export async function register(formData: FormData) {
     });
 
     return { success: true };
-  } catch (error) {
+  } catch {
     return { error: 'Something went wrong' };
   }
 }
@@ -84,7 +84,7 @@ export async function login(formData: FormData) {
     });
 
     return { success: true };
-  } catch (error) {
+  } catch {
     return { error: 'Something went wrong' };
   }
 }

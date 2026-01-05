@@ -2,7 +2,7 @@
 
 import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
-import Post from '@/models/Post';
+
 import { getSession } from '@/lib/auth';
 import { revalidatePath } from 'next/cache';
 
@@ -15,11 +15,11 @@ export async function toggleSavePost(postId: string) {
     await dbConnect();
 
     try {
-        const userId = (session as any).userId;
+        const userId = (session as { userId: string }).userId;
         const user = await User.findById(userId);
         
         // Robust ID check
-        const isSaved = user?.savedPosts?.some((id: any) => id.toString() === postId);
+        const isSaved = user?.savedPosts?.some((id: unknown) => String(id) === postId);
 
         if (isSaved) {
             await User.findByIdAndUpdate(userId, {
@@ -48,7 +48,7 @@ export async function getSavedPosts() {
     await dbConnect();
     
     try {
-        const userId = (session as any).userId;
+        const userId = (session as { userId: string }).userId;
         
         // Debug: Check raw user data first
         const rawUser = await User.findById(userId).lean();
@@ -68,7 +68,7 @@ export async function getSavedPosts() {
         console.log('Populated savedPosts length:', user.savedPosts.length);
 
         // Filter out any null posts
-        const validPosts = user.savedPosts.filter((post: any) => post && post._id);
+        const validPosts = user.savedPosts.filter((post: { _id: unknown }) => post && post._id);
         
         console.log('Valid posts to return:', validPosts.length);
 
@@ -89,11 +89,11 @@ export async function checkIsSaved(postId: string) {
     await dbConnect();
 
     try {
-        const user = await User.findById((session as any).userId);
+        const user = await User.findById((session as { userId: string }).userId);
         if (!user || !user.savedPosts) return false;
         
-        return user.savedPosts.some((id: any) => id.toString() === postId);
-    } catch (error) {
+        return user.savedPosts.some((id: unknown) => String(id) === postId);
+  } catch {
         return false;
     }
 }

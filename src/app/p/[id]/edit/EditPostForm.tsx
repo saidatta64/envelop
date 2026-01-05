@@ -22,7 +22,9 @@ const PRESET_COLORS = [
     { name: 'Dusk', bg: '#1e1b4b', text: '#e0e7ff' },
 ];
 
-export default function EditPostForm({ post }: { post: any }) {
+import { Post } from '@/types';
+
+export default function EditPostForm({ post }: { post: Post }) {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const [bgColor, setBgColor] = useState(post.style?.backgroundColor || '#ffffff');

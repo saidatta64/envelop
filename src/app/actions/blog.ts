@@ -30,7 +30,7 @@ export async function createPost(formData: FormData) {
       title,
       content,
       excerpt: excerpt || content.replace(/<[^>]*>?/gm, '').substring(0, 150) + '...',
-      author: (session as any).userId,
+      author: (session as { userId: string }).userId,
       isAnonymous: false, // Changed to show username as requested
       style: {
         backgroundColor: backgroundColor || '#ffffff',
@@ -41,7 +41,7 @@ export async function createPost(formData: FormData) {
 
     revalidatePath('/');
     return { success: true };
-  } catch (error) {
+  } catch {
     return { error: 'Failed to create post' };
   }
 }
@@ -78,14 +78,14 @@ export async function deletePost(postId: string) {
     const post = await Post.findById(postId);
     if (!post) return { error: 'Post not found' };
     
-    if (post.author.toString() !== (session as any).userId) {
+    if (post.author.toString() !== (session as { userId: string }).userId) {
       return { error: 'Unauthorized' };
     }
 
     await Post.findByIdAndDelete(postId);
     revalidatePath('/');
     return { success: true };
-  } catch (error) {
+  } catch {
     return { error: 'Failed to delete post' };
   }
 }
@@ -105,7 +105,7 @@ export async function updatePost(postId: string, formData: FormData) {
     const post = await Post.findById(postId);
     if (!post) return { error: 'Post not found' };
     
-    if (post.author.toString() !== (session as any).userId) {
+    if (post.author.toString() !== (session as { userId: string }).userId) {
       return { error: 'Unauthorized' };
     }
 
@@ -123,7 +123,7 @@ export async function updatePost(postId: string, formData: FormData) {
     revalidatePath(`/p/${postId}`);
     revalidatePath('/');
     return { success: true };
-  } catch (error) {
+  } catch {
     return { error: 'Failed to update post' };
   }
 }

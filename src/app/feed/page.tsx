@@ -1,5 +1,6 @@
 import { getPosts } from "../actions/blog";
 import Link from "next/link";
+import { Post } from "@/types";
 
 export default async function FeedPage() {
     const posts = await getPosts();
@@ -18,7 +19,7 @@ export default async function FeedPage() {
             <section className="mt-4" style={{ paddingBottom: '4rem' }}>
                 <div className="grid-cols">
                     {posts.length > 0 ? (
-                        posts.map((post: any) => (
+                        posts.map((post: Post) => (
                             <article key={post._id} style={{
                                 padding: '2rem',
                                 borderBottom: '1px solid var(--border)',
@@ -47,7 +48,7 @@ export default async function FeedPage() {
                                     {post.excerpt.replace(/<[^>]*>?/gm, '')}
                                 </p>
                                 <div className="mt-1 flex items-center" style={{ fontSize: '0.8rem', display: 'flex', justifyContent: 'space-between', opacity: 0.8 }}>
-                                    <span className="serif" style={{ fontStyle: 'italic' }}>By {post.author?.username || 'Anonymous'}</span>
+                                    <span className="serif" style={{ fontStyle: 'italic' }}>By {(post.author as { username: string })?.username || 'Anonymous'}</span>
                                     <span style={{ color: 'var(--muted)' }}>{new Date(post.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                                 </div>
                             </article>

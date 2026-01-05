@@ -1,16 +1,17 @@
 import dbConnect from '@/lib/mongodb';
-import Post from '@/models/Post';
+import PostModel from '@/models/Post';
 import User from '@/models/User';
+import { Post } from '@/types';
 import { notFound } from 'next/navigation';
 import { getSession } from '@/lib/auth';
 import PostManagement from '@/components/PostManagement';
 import { checkIsSaved } from '@/app/actions/bookmarks';
 import SaveButton from '@/components/SaveButton';
 
-async function getPost(id: string) {
+async function getPost(id: string): Promise<Post | null> {
     await dbConnect();
     try {
-        const post = await Post.findById(id).populate({ path: 'author', model: User, select: 'username' }).lean();
+        const post = await PostModel.findById(id).populate({ path: 'author', model: User, select: 'username' }).lean();
         if (!post) return null;
         return JSON.parse(JSON.stringify(post));
     } catch (error) {
@@ -21,8 +22,8 @@ async function getPost(id: string) {
 export default async function PostPage(props: { params: Promise<{ id: string }> }) {
     const params = await props.params;
     const post = await getPost(params.id);
-    const session = (await getSession()) as any;
-    const isOwner = session?.userId === post?.author?._id;
+    const session = await getSession();
+    const isOwner = session?.userId === (post?.author as any)?._id;
     const isSaved = await checkIsSaved(params.id);
 
     if (!post) {

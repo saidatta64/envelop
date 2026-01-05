@@ -1,6 +1,6 @@
 'use client';
 
-import { useEditor, EditorContent, BubbleMenu } from '@tiptap/react';
+import { useEditor, EditorContent, BubbleMenu, Editor } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
 import Image from '@tiptap/extension-image';
 import Link from '@tiptap/extension-link';
@@ -11,7 +11,7 @@ import { useState } from 'react';
 import Modal from './Modal';
 import { uploadImage } from '@/app/actions/upload';
 
-const MenuBar = ({ editor, onAddImage, backgroundColor, textColor }: { editor: any, onAddImage: () => void, backgroundColor?: string, textColor?: string }) => {
+const MenuBar = ({ editor, onAddImage, backgroundColor, textColor }: { editor: Editor | null, onAddImage: () => void, backgroundColor?: string, textColor?: string }) => {
     if (!editor) {
         return null;
     }
@@ -102,7 +102,7 @@ const MenuBar = ({ editor, onAddImage, backgroundColor, textColor }: { editor: a
     );
 };
 
-export default function TiptapEditor({ content, onChange, style, backgroundColor, textColor }: { content: string, onChange: (html: string) => void, style?: any, backgroundColor?: string, textColor?: string }) {
+export default function TiptapEditor({ content, onChange, style, backgroundColor, textColor }: { content: string, onChange: (html: string) => void, style?: React.CSSProperties, backgroundColor?: string, textColor?: string }) {
     const [isImageModalOpen, setIsImageModalOpen] = useState(false);
     const [imageUrl, setImageUrl] = useState('');
     const [uploading, setUploading] = useState(false);
